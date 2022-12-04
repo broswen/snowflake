@@ -1,0 +1,31 @@
+name = "snowflake"
+main = "src/index.ts"
+compatibility_date = "2022-11-01"
+workers_dev = false
+
+kv_namespaces = [
+    { binding = "CONFIG", id = "", preview_id = ""},
+]
+
+[durable_objects]
+bindings = [
+    {name = "COUNTER", class_name = "Counter"},
+    {name = "NODE", class_name = "Node"},
+]
+
+[vars]
+ENVIRONMENT = "production"
+
+[[unsafe.bindings]]
+type = "analytics_engine"
+name = "NODE_DATA"
+dataset = "SNOWFLAKE_NODE_DATA"
+
+[[unsafe.bindings]]
+type = "analytics_engine"
+name = "COUNTER_DATA"
+dataset = "SNOWFLAKE_COUNTER_DATA"
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["Counter", "Node"]

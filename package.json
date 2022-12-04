@@ -1,0 +1,26 @@
+{
+  "name": "snowflake",
+  "version": "0.0.0",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.18.0",
+    "@types/jest": "^29.2.1",
+    "jest": "^29.2.2",
+    "jest-environment-miniflare": "^2.11.0",
+    "miniflare": "^2.11.0",
+    "protobufjs-cli": "^1.0.2",
+    "ts-jest": "^29.0.3",
+    "typescript": "^4.8.4",
+    "wrangler": "2.1.13"
+  },
+  "private": true,
+  "scripts": {
+    "start": "wrangler dev",
+    "publish": "wrangler publish",
+    "build": "npx wrangler publish --dry-run --outdir=dist",
+    "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
+  },
+  "dependencies": {
+    "protobufjs": "^7.1.2",
+    "toucan-js": "^2.7.0"
+  }
+}
