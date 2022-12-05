@@ -2,6 +2,7 @@ import Toucan from "toucan-js"
 import {nodeURL, rendezvousHash} from "./sharding/sharding";
 import {jsonResponse} from "./node/node";
 export {Node} from './node/node'
+export {Counter} from './counter/counter'
 
 export interface Config {
 	nodeCount: number
@@ -63,7 +64,7 @@ export async function handler(
 	})
 	const config = await getConfig('node', env)
 	const url = new URL(request.url)
-	const ip = request.headers.get('cf-connecting-ip')
+	const ip = request.headers.get('cf-connecting-ip') ?? ''
 
 	if (request.method === 'GET') {
 		// use key + ip for node hash, help distribute reads

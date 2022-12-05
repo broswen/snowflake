@@ -1,7 +1,7 @@
 import {Config, DefaultConfig, Env, getConfig} from "../index";
 import {Range} from "../id/id";
 
-export function parsePath(path: string): {id: string {
+export function parsePath(path: string): {id: string} {
     const details = {
         id: ''
     }

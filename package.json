@@ -17,7 +17,7 @@
     "start": "wrangler dev",
     "publish": "wrangler publish",
     "build": "npx wrangler publish --dry-run --outdir=dist",
-    "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
   "dependencies": {
     "protobufjs": "^7.1.2",

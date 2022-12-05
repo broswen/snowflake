@@ -4,7 +4,7 @@ compatibility_date = "2022-11-01"
 workers_dev = false
 
 kv_namespaces = [
-    { binding = "CONFIG", id = "", preview_id = ""},
+    { binding = "CONFIG", id = "a", preview_id = "a"},
 ]
 
 [durable_objects]
