@@ -17,3 +17,7 @@ export function NewRange(start: number, size: number): Range {
         current: start
     }
 }
+
+export function percentUsed(range: Range): number {
+    return ((range.current - range.start) / (range.end - range.start)) * 100
+}

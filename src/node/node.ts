@@ -1,5 +1,5 @@
 import {Config, DefaultConfig, Env, getConfig} from "../index";
-import {Range} from "../id/id";
+import {percentUsed, Range} from "../id/id";
 
 export function parsePath(path: string): {id: string} {
     const details = {
@@ -45,14 +45,39 @@ export class Node implements DurableObject {
         if (request.method === 'GET') {
 
             // if no ranges exist, request new range from counter
+            if (this.ranges.length < 1) {
+                await this.fetchRange()
+            }
             // find the lowest range for this node
             // increment current on range and use that index
-            // if current is greater than end, remove range
-            // if no more ranges, request a new range
-            // if only one range exists and it is almost empty, request a new range
+            const index = this.ranges[0].current
+            this.ranges[0].current++
+            // if range is used, discard
+            if (percentUsed(this.ranges[0]) >= 100) {
+                this.ranges = this.ranges.slice(1)
+            }
+            const ts = new Date().getTime()
+            // if only one range exists, and it is almost empty, request a new range
+            if (this.ranges.length === 1 && percentUsed(this.ranges[0]) > 90) {
+                // don't await, do async
+                this.fetchRange()
+            }
             this.state.storage?.put('ranges', this.ranges)
-            return jsonResponse('', 200, this.id)
+            return jsonResponse({
+                id: `${ts}${this.id}${index}`,
+                node: this.id,
+                index: index,
+                ts
+            }, 200, this.id)
         }
         return jsonResponse({error: 'not allowed'}, 405, this.id)
+    }
+
+    async fetchRange(): Promise<void> {
+        const counter = this.env.COUNTER.idFromName("counter")
+        const obj = this.env.COUNTER.get(counter)
+        let res = await obj.fetch('https://snowflake.broswen.com/counter')
+        let newRange: Range = await res.json<Range>()
+        this.ranges.push(newRange)
     }
 }

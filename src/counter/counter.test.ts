@@ -9,7 +9,7 @@ describe('Counter', () => {
         const stub = env.COUNTER.get(id)
         const res = await stub.fetch('https://snowflake.broswen.com/counter')
         expect(res.status).toEqual(200)
-        expect(await res.json<Range>()).toStrictEqual({
+        expect(await res.json<Range>()).toEqual({
             start: 0,
             end: 100,
             current: 0
@@ -22,7 +22,7 @@ describe('Counter', () => {
         const stub = env.COUNTER.get(id)
         const res = await stub.fetch('https://snowflake.broswen.com/counter')
         expect(res.status).toEqual(200)
-        expect(await res.json<Range>()).toStrictEqual({
+        expect(await res.json<Range>()).toEqual({
             start: 101,
             end: 201,
             current: 101

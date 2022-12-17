@@ -2,7 +2,7 @@ import {hash, rank, rendezvousHash, nodeURL} from "./sharding";
 
 describe('shardURL', function () {
     test('should create url with shard name', () => {
-        expect(nodeURL('shard:1')).toEqual('https://ring.broswen.com/shard:1')
+        expect(nodeURL('node:1')).toEqual('https://snowflake.broswen.com/node:1')
     })
 })
 

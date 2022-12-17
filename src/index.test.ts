@@ -8,6 +8,6 @@ class ExecutionContext {
 
 const env = getMiniflareBindings()
 describe('fetch handler', () => {
-    test('', async () => {
+    test('get id', async () => {
     })
 })

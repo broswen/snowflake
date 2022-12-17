@@ -21,10 +21,11 @@ export class Counter implements DurableObject {
         const url = new URL(request.url)
         if (request.method === 'GET') {
             const size = parseInt(url.searchParams.get('size') ?? '100')
+            // TODO double check how we should partition index ranges
             const r: Range = NewRange(this.index, size)
             this.index += size + 1
             this.state.storage?.put<number>('index', this.index)
-            return jsonResponse(JSON.stringify(r), 200, 'counter')
+            return jsonResponse(r, 200, 'counter')
         }
         return new Response('not allowed', {status: 405})
     }
