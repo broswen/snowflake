@@ -70,7 +70,7 @@ export class Node implements DurableObject {
             const index = this.ranges[0].current
             this.ranges[0].current++
             // if range is used, discard
-            if (percentUsed(this.ranges[0]) >= 100) {
+            if (percentUsed(this.ranges[0]) > 100) {
                 this.ranges = this.ranges.slice(1)
             }
             const ts = new Date().getTime()

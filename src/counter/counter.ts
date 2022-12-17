@@ -36,7 +36,7 @@ export class Counter implements DurableObject {
             const size = parseInt(url.searchParams.get('size') ?? '100')
             // TODO double check how we should partition index ranges
             const r: Range = NewRange(this.index, size)
-            this.index += size + 1
+            this.index += size
             this.state.storage?.put<number>('index', this.index)
             return jsonResponse(r, 200, 'counter')
         }

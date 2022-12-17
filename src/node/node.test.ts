@@ -46,10 +46,10 @@ describe('Node', () => {
         const counterStorage = await getMiniflareDurableObjectStorage(counterId)
         await nodeStorage.put('ranges', [{
             start: 0,
-            end: 100,
+            end: 99,
             current: 100
         }])
-        await counterStorage.put('index', 101)
+        await counterStorage.put('index', 100)
         const now = new Date()
         jest.useFakeTimers().setSystemTime(now)
         const stub = env.NODE.get(nodeId)
@@ -65,11 +65,11 @@ describe('Node', () => {
         res = await stub.fetch('https://snowflake.broswen.com/1')
         expect(res.status).toEqual(200)
         expect(await res.json<Range>()).toEqual({
-            id: `${now.getTime()}${1}${101}`,
-            index: 101,
+            id: `${now.getTime()}${1}${100}`,
+            index: 100,
             node: 1,
             ts: now.getTime()
         })
-        expect(await nodeStorage.get<Range[]>('ranges')).toEqual([{start: 101, end: 201, current: 102}])
+        expect(await nodeStorage.get<Range[]>('ranges')).toEqual([{start: 100, end: 199, current: 101}])
     })
 })
