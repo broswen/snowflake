@@ -1,5 +1,6 @@
 import {Config, DefaultConfig, Env, getConfig} from "../index";
 import {ID, percentUsed, Range} from "../id/id";
+import Toucan from "toucan-js";
 
 export function parsePath(path: string): {id: string} {
     const details = {
@@ -42,6 +43,14 @@ export class Node implements DurableObject {
         const {id} = parsePath(url.pathname)
         this.id = parseInt(id)
 
+        const sentry = new Toucan({
+            dsn: this.env.SENTRY_DSN,
+            request,
+            tracesSampleRate: 1.0,
+            environment: this.env.environment
+        })
+        sentry.setTag('node', this.id)
+
         if (url.pathname === '/node') {
             return jsonResponse({index: this.ranges}, 200, `${this.id}`)
         }
@@ -50,7 +59,11 @@ export class Node implements DurableObject {
 
             // if no ranges exist, request new range from counter
             if (this.ranges.length < 1) {
-                await this.fetchRange()
+                try {
+                    await this.fetchRange()
+                } catch (e) {
+                    sentry.captureException(e)
+                }
             }
             // find the lowest range for this node
             // increment current on range and use that index
@@ -64,7 +77,11 @@ export class Node implements DurableObject {
             // if only one range exists, and it is almost empty, request a new range
             if (this.ranges.length === 1 && percentUsed(this.ranges[0]) > 90) {
                 // don't await, do async
-                this.fetchRange()
+                try {
+                    this.fetchRange()
+                } catch (e) {
+                    sentry.captureException(e)
+                }
             }
             this.state.storage?.put('ranges', this.ranges)
             const id: ID = {

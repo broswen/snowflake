@@ -1,6 +1,7 @@
 import {Config, DefaultConfig, Env, getConfig} from "../index";
 import {NewRange, Range} from "../id/id";
 import {jsonResponse} from "../node/node";
+import Toucan from "toucan-js";
 
 export class Counter implements DurableObject {
     state: DurableObjectState
@@ -19,6 +20,15 @@ export class Counter implements DurableObject {
 
     async fetch(request: Request): Promise<Response> {
         const url = new URL(request.url)
+
+        const sentry = new Toucan({
+            dsn: this.env.SENTRY_DSN,
+            request,
+            tracesSampleRate: 1.0,
+            environment: this.env.environment
+        })
+        sentry.setTag('node', 'counter')
+
         if (url.pathname === '/counter') {
             return jsonResponse({index: this.index}, 200, 'counter')
         }
