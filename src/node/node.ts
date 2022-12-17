@@ -1,5 +1,5 @@
 import {Config, DefaultConfig, Env, getConfig} from "../index";
-import {percentUsed, Range} from "../id/id";
+import {ID, percentUsed, Range} from "../id/id";
 
 export function parsePath(path: string): {id: string} {
     const details = {
@@ -26,7 +26,7 @@ export class Node implements DurableObject {
     state: DurableObjectState
     env: Env
     config: Config = DefaultConfig
-    id: string = ''
+    id: number = -1
     ranges: Range[] = []
     constructor(state: DurableObjectState, env: Env) {
         this.state = state
@@ -40,7 +40,11 @@ export class Node implements DurableObject {
     async fetch(request: Request): Promise<Response> {
         const url = new URL(request.url)
         const {id} = parsePath(url.pathname)
-        this.id = id
+        this.id = parseInt(id)
+
+        if (url.pathname === '/node') {
+            return jsonResponse({index: this.ranges}, 200, `${this.id}`)
+        }
 
         if (request.method === 'GET') {
 
@@ -63,20 +67,21 @@ export class Node implements DurableObject {
                 this.fetchRange()
             }
             this.state.storage?.put('ranges', this.ranges)
-            return jsonResponse({
+            const id: ID = {
                 id: `${ts}${this.id}${index}`,
                 node: this.id,
                 index: index,
                 ts
-            }, 200, this.id)
+            }
+            return jsonResponse(id, 200, `${this.id}`)
         }
-        return jsonResponse({error: 'not allowed'}, 405, this.id)
+        return jsonResponse({error: 'not allowed'}, 405, `${this.id}`)
     }
 
     async fetchRange(): Promise<void> {
         const counter = this.env.COUNTER.idFromName("counter")
         const obj = this.env.COUNTER.get(counter)
-        let res = await obj.fetch('https://snowflake.broswen.com/counter')
+        let res = await obj.fetch('https://snowflake.broswen.com')
         let newRange: Range = await res.json<Range>()
         this.ranges.push(newRange)
     }

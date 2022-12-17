@@ -1,4 +1,5 @@
 export interface ID {
+    id: string
     node: number
     ts: number
     index: number
@@ -10,6 +11,7 @@ export interface Range {
     current: number
 }
 
+// NewRange returns a Range starting at start and ending at start+size
 export function NewRange(start: number, size: number): Range {
     return {
         start,
@@ -18,6 +20,7 @@ export function NewRange(start: number, size: number): Range {
     }
 }
 
+// percentUsed returns the percent (0-100) of how used range is
 export function percentUsed(range: Range): number {
     return ((range.current - range.start) / (range.end - range.start)) * 100
 }

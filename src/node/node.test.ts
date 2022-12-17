@@ -25,7 +25,7 @@ describe('Node', () => {
         expect(await res.json<Range>()).toEqual({
             id: `${now.getTime()}${1}${0}`,
             index: 0,
-            node: "1",
+            node: 1,
             ts: now.getTime()
         })
 
@@ -34,7 +34,7 @@ describe('Node', () => {
         expect(await res.json<Range>()).toEqual({
             id: `${now.getTime()}${1}${1}`,
             index: 1,
-            node: "1",
+            node: 1,
             ts: now.getTime()
         })
     })
@@ -58,7 +58,7 @@ describe('Node', () => {
         expect(await res.json<Range>()).toEqual({
             id: `${now.getTime()}${1}${100}`,
             index: 100,
-            node: "1",
+            node: 1,
             ts: now.getTime()
         })
 
@@ -67,7 +67,7 @@ describe('Node', () => {
         expect(await res.json<Range>()).toEqual({
             id: `${now.getTime()}${1}${101}`,
             index: 101,
-            node: "1",
+            node: 1,
             ts: now.getTime()
         })
         expect(await nodeStorage.get<Range[]>('ranges')).toEqual([{start: 101, end: 201, current: 102}])

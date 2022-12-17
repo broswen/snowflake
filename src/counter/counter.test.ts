@@ -7,7 +7,7 @@ describe('Counter', () => {
         const id = env.COUNTER.newUniqueId()
         const storage = await getMiniflareDurableObjectStorage(id)
         const stub = env.COUNTER.get(id)
-        const res = await stub.fetch('https://snowflake.broswen.com/counter')
+        const res = await stub.fetch('https://snowflake.broswen.com')
         expect(res.status).toEqual(200)
         expect(await res.json<Range>()).toEqual({
             start: 0,
@@ -20,7 +20,7 @@ describe('Counter', () => {
         const storage = await getMiniflareDurableObjectStorage(id)
         await storage.put('index', 101)
         const stub = env.COUNTER.get(id)
-        const res = await stub.fetch('https://snowflake.broswen.com/counter')
+        const res = await stub.fetch('https://snowflake.broswen.com')
         expect(res.status).toEqual(200)
         expect(await res.json<Range>()).toEqual({
             start: 101,

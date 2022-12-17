@@ -66,13 +66,27 @@ export async function handler(
 	const url = new URL(request.url)
 	const ip = request.headers.get('cf-connecting-ip') ?? ''
 
+	if (url.pathname === '/counter') {
+		const counter = env.COUNTER.idFromName("counter")
+		const obj = env.COUNTER.get(counter)
+		return obj.fetch(request)
+	}
+
 	if (request.method === 'GET') {
 		// use key + ip for node hash, help distribute reads
 		const nodeId = `${await rendezvousHash(ip, config.nodeCount)}`
 		const nodeUrl = nodeURL(nodeId)
 		const id = env.NODE.idFromName(nodeId)
 		const obj = env.NODE.get(id)
-		return obj.fetch(new Request(nodeUrl))
+		if (url.pathname === '/node') {
+			return obj.fetch(request)
+		}
+		try {
+			return obj.fetch(new Request(nodeUrl))
+		} catch (e) {
+			sentry.captureException(e)
+			return jsonResponse({error: 'internal server error'}, 500)
+		}
 	}
 	return jsonResponse({error: 'not allowed'}, 405)
 }

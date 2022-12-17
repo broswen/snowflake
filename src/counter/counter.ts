@@ -19,6 +19,9 @@ export class Counter implements DurableObject {
 
     async fetch(request: Request): Promise<Response> {
         const url = new URL(request.url)
+        if (url.pathname === '/counter') {
+            return jsonResponse({index: this.index}, 200, 'counter')
+        }
         if (request.method === 'GET') {
             const size = parseInt(url.searchParams.get('size') ?? '100')
             // TODO double check how we should partition index ranges
