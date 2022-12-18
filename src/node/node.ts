@@ -90,6 +90,13 @@ export class Node implements DurableObject {
                 index: index,
                 ts
             }
+            if (this.env.environment === 'production') {
+                this.env.NODE_DATA.writeDataPoint({
+                    doubles: [index],
+                    indexes: [`${this.id}`]
+                })
+            }
+
             return jsonResponse(id, 200, `${this.id}`)
         }
         return jsonResponse({error: 'not allowed'}, 405, `${this.id}`)

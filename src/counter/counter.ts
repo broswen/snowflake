@@ -38,6 +38,12 @@ export class Counter implements DurableObject {
             const r: Range = NewRange(this.index, size)
             this.index += size
             this.state.storage?.put<number>('index', this.index)
+            if (this.env.environment === 'production') {
+                this.env.COUNTER_DATA.writeDataPoint({
+                    doubles: [this.index],
+                    indexes: ['counter']
+                })
+            }
             return jsonResponse(r, 200, 'counter')
         }
         return new Response('not allowed', {status: 405})
