@@ -6,10 +6,12 @@ export {Counter} from './counter/counter'
 
 export interface Config {
 	nodeCount: number
+	rangeSize: number
 }
 
 export const DefaultConfig: Config = {
-	nodeCount: 10
+	nodeCount: 10,
+	rangeSize: 100
 }
 
 export interface WorkerAnalyticsNamespace {

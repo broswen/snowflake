@@ -105,7 +105,7 @@ export class Node implements DurableObject {
     async fetchRange(): Promise<void> {
         const counter = this.env.COUNTER.idFromName("counter")
         const obj = this.env.COUNTER.get(counter)
-        let res = await obj.fetch('https://snowflake.broswen.com')
+        let res = await obj.fetch(`https://snowflake.broswen.com?size=${this.config.rangeSize}`)
         let newRange: Range = await res.json<Range>()
         this.ranges.push(newRange)
     }
